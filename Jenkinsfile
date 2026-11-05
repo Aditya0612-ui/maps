@@ -7,7 +7,8 @@ pipeline {
 
     options {
         disableConcurrentBuilds()
-        timeout(time: 30, unit: 'MINUTES')
+        timeout(time: 45, unit: 'MINUTES')
+        skipDefaultCheckout()
     }
 
     environment {
@@ -38,6 +39,18 @@ pipeline {
             }
         }
 
+        stage('Analyze Project') {
+            steps {
+                sh 'flutter analyze'
+            }
+        }
+
+        stage('Run Tests') {
+            steps {
+                sh 'flutter test'
+            }
+        }
+
         stage('Build Release APK') {
             steps {
                 sh 'flutter build apk --release --no-pub'
@@ -48,6 +61,10 @@ pipeline {
     post {
         success {
             archiveArtifacts artifacts: 'build/app/outputs/flutter-apk/app-release.apk', fingerprint: true
+            echo 'Flutter Android build completed successfully!'
+        }
+        failure {
+            echo 'Pipeline failed. Check the Jenkins console output.'
         }
     }
 }

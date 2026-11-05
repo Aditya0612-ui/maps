@@ -25,6 +25,11 @@ class _LocationInputState extends State<LocationInput> {
   var _isGettingLocation = false;
 
   Future<void> _savePlace(double latitude, double longitude) async {
+    if (!mounted) return;
+    setState(() {
+      _isGettingLocation = true;
+    });
+
     String address = '';
 
     // 1. Try native geocoding (uses Android's built-in Geocoder service)
@@ -84,6 +89,8 @@ class _LocationInputState extends State<LocationInput> {
           'Lat: ${latitude.toStringAsFixed(4)}, Lng: ${longitude.toStringAsFixed(4)}';
     }
 
+    if (!mounted) return;
+
     setState(() {
       _pickedLocation = PlaceLocation(
         latitude: latitude,
@@ -119,15 +126,25 @@ class _LocationInputState extends State<LocationInput> {
       }
     }
 
+    if (!mounted) return;
+
     setState(() {
       _isGettingLocation = true;
     });
 
-    locationData = await location.getLocation();
-    final lat = locationData.latitude;
-    final lng = locationData.longitude;
+    try {
+      locationData = await location.getLocation();
+      final lat = locationData.latitude;
+      final lng = locationData.longitude;
 
-    _savePlace(lat, lng);
+      await _savePlace(lat, lng);
+    } catch (_) {
+      if (mounted) {
+        setState(() {
+          _isGettingLocation = false;
+        });
+      }
+    }
   }
 
   void _selectOnMap() async {
@@ -141,7 +158,7 @@ class _LocationInputState extends State<LocationInput> {
       return;
     }
 
-    _savePlace(pickedLocation.latitude, pickedLocation.longitude);
+    await _savePlace(pickedLocation.latitude, pickedLocation.longitude);
   }
 
   @override
