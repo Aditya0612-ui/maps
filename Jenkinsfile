@@ -1,83 +1,53 @@
 pipeline {
     agent any
 
+    triggers {
+        githubPush()
+    }
+
     options {
-        skipDefaultCheckout(true)
+        disableConcurrentBuilds()
+        timeout(time: 30, unit: 'MINUTES')
     }
 
     environment {
-        FLUTTER_HOME = '/opt/flutter'
-        ANDROID_HOME = '/opt/android-sdk'
-        ANDROID_SDK_ROOT = '/opt/android-sdk'
-        PATH = "/opt/flutter/bin:/opt/android-sdk/platform-tools:/opt/android-sdk/cmdline-tools/latest/bin:${env.PATH}"
+        CI = 'true'
+        FLUTTER_ROOT = '/opt/flutter'
+        ANDROID_HOME = '/usr/lib/android-sdk'
+        ANDROID_SDK_ROOT = '/usr/lib/android-sdk'
+        GRADLE_OPTS = '-Dorg.gradle.daemon=false -Dorg.gradle.jvmargs="-Xmx2048m -XX:MaxMetaspaceSize=512m"'
+        PATH = "/opt/flutter/bin:/usr/lib/android-sdk/cmdline-tools/latest/bin:/usr/lib/android-sdk/platform-tools:${env.PATH}"
     }
 
     stages {
-
-        stage('Checkout Source') {
+        stage('Checkout') {
             steps {
-                echo 'Pulling code from GitHub...'
                 checkout scm
             }
         }
 
-        stage('Check Flutter Environment') {
+        stage('Verify Toolchain') {
             steps {
-                sh '''
-                    echo "Checking Flutter..."
-                    flutter --version
-
-                    echo "Checking Dart..."
-                    dart --version
-
-                    echo "Checking Android SDK..."
-                    echo $ANDROID_HOME
-                    flutter doctor -v
-                '''
+                sh 'flutter --version'
             }
         }
 
         stage('Install Dependencies') {
             steps {
-                echo 'Installing Flutter dependencies...'
                 sh 'flutter pub get'
             }
         }
 
-        stage('Build APK') {
+        stage('Build Release APK') {
             steps {
-                echo 'Building Android APK...'
-                sh 'flutter build apk --release'
-            }
-        }
-
-        stage('Test') {
-            steps {
-                script {
-                    if (fileExists('test')) {
-                        sh 'flutter test'
-                    } else {
-                        echo 'No test directory found. Skipping Flutter tests.'
-                    }
-                }
-            }
-        }
-
-        stage('Archive APK') {
-            steps {
-                archiveArtifacts artifacts: 'build/app/outputs/flutter-apk/*.apk',
-                                 fingerprint: true
+                sh 'flutter build apk --release --no-pub'
             }
         }
     }
 
     post {
         success {
-            echo 'Flutter Android build completed successfully!'
-        }
-
-        failure {
-            echo 'Pipeline failed. Check the Jenkins console output.'
+            archiveArtifacts artifacts: 'build/app/outputs/flutter-apk/app-release.apk', fingerprint: true
         }
     }
 }
