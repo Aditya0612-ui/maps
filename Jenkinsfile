@@ -51,16 +51,16 @@ pipeline {
             }
         }
 
-        stage('Build Release APK') {
+        stage('Build App Bundle') {
             steps {
-                sh 'flutter build apk --release --no-pub'
+                sh 'flutter build appbundle'
             }
         }
     }
 
     post {
         success {
-            archiveArtifacts artifacts: 'build/app/outputs/flutter-apk/app-release.apk', fingerprint: true
+            archiveArtifacts artifacts: 'build/app/outputs/bundle/release/app-release.aab', fingerprint: true
             echo 'Flutter Android build completed successfully!'
         }
         failure {
