@@ -51,17 +51,23 @@ pipeline {
             }
         }
 
-        stage('Build App Bundle') {
+        stage('Build App Bundle (AAB)') {
             steps {
                 sh 'flutter build appbundle'
+            }
+        }
+
+        stage('Build APK') {
+            steps {
+                sh 'flutter build apk'
             }
         }
     }
 
     post {
         success {
-            archiveArtifacts artifacts: 'build/app/outputs/bundle/release/app-release.aab', fingerprint: true
-            echo 'Flutter Android build completed successfully!'
+            archiveArtifacts artifacts: 'build/app/outputs/bundle/release/app-release.aab, build/app/outputs/flutter-apk/app-release.apk', fingerprint: true
+            echo 'Flutter Android build completed successfully! Both AAB and APK generated.'
         }
         failure {
             echo 'Pipeline failed. Check the Jenkins console output.'
