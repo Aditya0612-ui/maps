@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.favorite_places"
+    namespace = "com.app.maps"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
