@@ -53,13 +53,33 @@ pipeline {
 
         stage('Build App Bundle (AAB)') {
             steps {
-                sh 'flutter build appbundle'
+                // Inject release keystore from Jenkins Credentials.
+                // Add these credentials in Jenkins → Manage Jenkins → Credentials:
+                //   - ID: release_keystore   → Secret File  (upload release.keystore)
+                //   - ID: key_alias          → Secret Text  ("release")
+                //   - ID: key_password       → Secret Text  (keystore key password)
+                //   - ID: store_password     → Secret Text  (keystore store password)
+                withCredentials([
+                    file(credentialsId: 'release_keystore', variable: 'KEYSTORE_PATH'),
+                    string(credentialsId: 'key_alias',      variable: 'KEY_ALIAS'),
+                    string(credentialsId: 'key_password',   variable: 'KEY_PASSWORD'),
+                    string(credentialsId: 'store_password', variable: 'STORE_PASSWORD')
+                ]) {
+                    sh 'flutter build appbundle --release'
+                }
             }
         }
 
         stage('Build APK') {
             steps {
-                sh 'flutter build apk'
+                withCredentials([
+                    file(credentialsId: 'release_keystore', variable: 'KEYSTORE_PATH'),
+                    string(credentialsId: 'key_alias',      variable: 'KEY_ALIAS'),
+                    string(credentialsId: 'key_password',   variable: 'KEY_PASSWORD'),
+                    string(credentialsId: 'store_password', variable: 'STORE_PASSWORD')
+                ]) {
+                    sh 'flutter build apk --release'
+                }
             }
         }
     }

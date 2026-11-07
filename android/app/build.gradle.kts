@@ -16,10 +16,12 @@ android {
 
     signingConfigs {
         create("release") {
-            keyAlias = "release"
-            keyPassword = "FavLocation@2024"
-            storeFile = file("release.keystore")
-            storePassword = "FavLocation@2024"
+            // Signing credentials are injected via environment variables from Jenkins Credentials.
+            // For local builds, set these variables in your shell or use a local keystore.properties file.
+            keyAlias     = System.getenv("KEY_ALIAS")     ?: "release"
+            keyPassword  = System.getenv("KEY_PASSWORD")  ?: ""
+            storeFile    = file(System.getenv("KEYSTORE_PATH") ?: "release.keystore")
+            storePassword = System.getenv("STORE_PASSWORD") ?: ""
         }
     }
 
