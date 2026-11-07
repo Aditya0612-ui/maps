@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-import 'package:favorite_places/screens/map.dart';
-import 'package:favorite_places/models/place.dart';
+import 'package:favorite_location/screens/map.dart';
+import 'package:favorite_location/models/place.dart';
 
 class PlaceDetailScreen extends StatelessWidget {
   const PlaceDetailScreen({super.key, required this.place});

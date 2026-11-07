@@ -6,7 +6,7 @@ import 'package:path/path.dart' as path;
 import 'package:sqflite/sqflite.dart' as sql;
 import 'package:sqflite/sqlite_api.dart';
 
-import 'package:favorite_places/models/place.dart';
+import 'package:favorite_location/models/place.dart';
 
 Future<Database> _getDatabase() async {
   final dbPath = await sql.getDatabasesPath();
@@ -52,7 +52,8 @@ class UserPlacesNotifier extends AsyncNotifier<List<Place>> {
     state = await AsyncValue.guard(_loadPlaces);
   }
 
-  Future<void> addPlace(String title, File image, PlaceLocation location) async {
+  Future<void> addPlace(
+      String title, File image, PlaceLocation location) async {
     final appDir = await syspaths.getApplicationDocumentsDirectory();
     final filename = path.basename(image.path);
     final copiedImage = await image.copy('${appDir.path}/$filename');

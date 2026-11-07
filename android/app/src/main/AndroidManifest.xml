@@ -13,7 +13,7 @@
         android:glEsVersion="0x00020000"
         android:required="true" />
     <application
-        android:label="favorite_places"
+        android:label="favorite_location"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <!-- Google Maps API Key -->

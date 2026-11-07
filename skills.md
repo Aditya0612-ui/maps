@@ -28,7 +28,7 @@ Organize imports into three distinct blocks separated by blank lines:
 
 1. **Dart Core Imports** (e.g., `dart:io`, `dart:convert`)
 2. **Flutter & Third-Party Packages** (e.g., `package:flutter/material.dart`, `package:flutter_riverpod/...`)
-3. **Internal App Imports** (always use package URI format: `package:favorite_places/...`)
+3. **Internal App Imports** (always use package URI format: `package:favorite_location/...`)
 
 When importing utility packages, use standard concise aliases:
 ```dart

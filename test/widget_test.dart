@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:favorite_places/models/place.dart';
+import 'package:favorite_location/models/place.dart';
 
 void main() {
   group('Place and PlaceLocation Models', () {

@@ -1,4 +1,4 @@
-# favorite_places
+# favorite_location
 
 A new Flutter project.
 

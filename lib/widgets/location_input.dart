@@ -6,8 +6,8 @@ import 'package:location/location.dart';
 import 'package:geocoding/geocoding.dart' hide Location;
 import 'package:http/http.dart' as http;
 
-import 'package:favorite_places/screens/map.dart';
-import 'package:favorite_places/models/place.dart';
+import 'package:favorite_location/screens/map.dart';
+import 'package:favorite_location/models/place.dart';
 
 class LocationInput extends StatefulWidget {
   const LocationInput({super.key, required this.onSelectLocation});
@@ -55,8 +55,7 @@ class _LocationInputState extends State<LocationInput> {
           if (place.administrativeArea != null &&
               place.administrativeArea!.trim().isNotEmpty)
             place.administrativeArea!.trim(),
-          if (place.postalCode != null &&
-              place.postalCode!.trim().isNotEmpty)
+          if (place.postalCode != null && place.postalCode!.trim().isNotEmpty)
             place.postalCode!.trim(),
           if (place.country != null && place.country!.trim().isNotEmpty)
             place.country!.trim(),
@@ -220,7 +219,8 @@ class _LocationInputState extends State<LocationInput> {
           decoration: BoxDecoration(
             border: Border.all(
               width: 1,
-              color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
+              color:
+                  Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
             ),
           ),
           child: previewContent,
